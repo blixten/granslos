@@ -138,6 +138,10 @@ def preset_question(q):
 st.markdown("""
 <style>
 /* Sidebar content wrapper */
+section[data-testid="stSidebar"] {
+  width: 400px !important; # Set the width to your desired value
+}
+
 [data-testid="stSidebarContent"] {
   display: flex;
   flex-direction: column;
@@ -149,7 +153,7 @@ st.markdown("""
   margin-top: auto;
   bottom: 0;
   position: fixed;
-  max-width: 400px;
+  max-width: 300px;
 }
 
             
