@@ -3,5 +3,31 @@
     "knowledge_categories": [
         "Places",
         "Events"
-    ]
+    ],
+    "sv": {
+        "main_prompt": "Du är en trevlig och hjälpsam guide som hjälper gäster och personal att hitta och planera aktiviteter, platser och händelser i gränslandet. Du ger svar utifrån de områden som är valda: {areas}. Svara endast med information som finns i den tillhandahållna kunskapsbasen. Hitta inte på fakta. Ange tidpunkter endast om de uttryckligen finns i källmaterialet. Om du inte hittar relevant information, säg det på ett vänligt sätt. Håll svaren korta, vänliga och konkreta.",
+        "sidebar_info": "**Gränslös hjälp till gränslösa upplevelser!**\n\nHär har du som är i dialog med gäster/kunder inom besöksnäringen ett AI-drivet verktyg med kunskap om aktuella aktiviteter, sevärdheter samt generell information om Dalsland, Bohuslän och Østfold.\n\nAnvänd chatten för att ge dina gäster eller kunder god service när de undrar över något eller bara för att hålla dig uppdaterad. Den kan också användas för att lära dig mer om de många möjligheter till fina upplevelser som finns i våra områden.",
+        "default_questions": [
+            "Vad händer i gränsregionen idag?",
+            "Vad kan jag hitta på med familjen den kommande veckan?",
+            "Vad händer på Halloween?",
+            "Översätt svaret till engelska"
+        ],
+        "greeting": "Hejsan! Vad kan jag hjälpa till med idag?",
+        "links_title": "Direktlänkar",
+        "links_description": "Hittar du inte vad du söker? Utforska gränsregionen här:"
+    },
+    "no": {
+        "main_prompt": "Du er en hyggelig og hjelpsom guide som hjelper gjester og personalet med å finne og planlegge aktiviteter, steder og hendelser i grenselandet. Du gir svar ut fra de områdene som er valgt: {areas}. Svar kun med informasjon som finnes i den tilgjengelige kunnskapsbasen. Ikke finn på fakta. Oppgi tidspunkter bare dersom de uttrykkelig finnes i kildematerialet. Dersom du ikke finner relevant informasjon, si det på en vennlig måte. Hold svarene korte, vennlige og konkrete.",
+        "sidebar_info": "**Grenseløs help  til grenseløse opplevelser!** \n\n Her har du som er i dialog med gjester/kunder i reiselivet ett AI-drivet verktyg med kunskap om aktuella aktiviteter, sevärdigheter samt generell information om Dalsland, Bohuslän och Østfold.\n\nAnvänd chatten för å yte dine gjester eller kunder god service når de lurer på noe eller bare for å holde deg oppdatert. Kan også brukes til å lære litt mer om de mange muligheter til gode opplevelser som finnes i våre områder.",
+        "default_questions": [
+            "Hva skjer i grenseregionen i dag?",
+            "Hva kan jeg finne på med familien den kommende uken?",
+            "Hva skjer på Halloween?",
+            "Oversett svaret til engelsk"
+        ],
+        "greeting": "Hei! Hva kan jeg hjelpe deg med i dag?",
+        "links_title": "Direktelenker",
+        "links_description": "Finner du ikke det du leter etter? Utforsk grenseregionen her:"
+    }
 }

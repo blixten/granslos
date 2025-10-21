@@ -64,7 +64,7 @@ def send_chat_message(input, areas):
                     {
                         "type": "input_text",
                         "text": f"""
-                            {st.session_state["settings"]["main_prompt"]}
+                            {st.session_state["settings"][st.session_state["language"]]["main_prompt"]}
                             Du ger svar utifrån de områden som är valda: {areas}
                             """
                     }
@@ -95,20 +95,6 @@ def send_chat_message(input, areas):
     return response.output_parsed
 
 
-
-    
-
-if "messages" not in st.session_state.keys():
-    st.session_state["messages"] = [({"general_response": "Hejsan! Vad kan jag hjälpa till med idag?"}, "assistant")]
-
-if "areas" not in st.session_state.keys():
-    st.session_state["areas"] = {"Bohuslän": True, "Dalsland": True, "Østfold": True }
-
-if "bot_output" not in st.session_state.keys():
-    st.session_state["bot_output"] = ""
-if "bot_triggered" not in st.session_state.keys():
-    st.session_state["bot_triggered"] = False
-
 if "settings" not in st.session_state.keys():
     with open("settings.json", "r", encoding="utf-8") as file:
         settings = json.load(file)
@@ -118,6 +104,23 @@ if "settings" not in st.session_state.keys():
     if "main_prompt" not in st.session_state["settings"].keys():
         st.session_state["settings"]["main_prompt"] = ""
 
+if "default_language" not in st.session_state.keys():
+    st.session_state["default_language"] = "no"
+
+if "language" not in st.session_state.keys():
+    st.session_state["language"] = st.session_state["default_language"]
+    
+
+if "messages" not in st.session_state.keys():
+    st.session_state["messages"] = [({"general_response": st.session_state["settings"][st.session_state["language"]]["greeting"]}, "assistant")]
+
+if "areas" not in st.session_state.keys():
+    st.session_state["areas"] = {"Bohuslän": True, "Dalsland": True, "Østfold": True }
+
+if "bot_output" not in st.session_state.keys():
+    st.session_state["bot_output"] = ""
+if "bot_triggered" not in st.session_state.keys():
+    st.session_state["bot_triggered"] = False
 
 
 if "knowledge_sources" not in st.session_state.keys():
@@ -161,22 +164,35 @@ section[data-testid="stSidebar"] {
 """, unsafe_allow_html=True)
 
 with st.sidebar:
-    st.subheader("Gränslös reseguide")
-    st.write("""Denna reseplanerare är ett AI-drivet verktyg med kunskap om aktuella aktiviteter, sevärdigheter
-             samt generell information om Dalsland, Bohuslän och Østfold.  
-             Använd chatten för att förklara vad du har för önskemål med din upplevelse eller resa, vad du vill uppleva
-             eller undvika, samt information om dig eller gruppen du reser med.""")
+    st.markdown(st.session_state["settings"][st.session_state["language"]]["sidebar_info"])
 
+    st.container(height=20, border=False)
 
+    st.markdown(f"**{st.session_state["settings"][st.session_state["language"]]["links_title"]}**")
+    st.markdown(f"{st.session_state["settings"][st.session_state["language"]]["links_description"]}")
+    
+    
+    with st.container(horizontal=True):
+        st.link_button("Bohuslän", "https://www.vastsverige.com/bohuslan/")
+        st.link_button("Dalsland", "https://www.vastsverige.com/dalsland/")
+        st.link_button("Østfold", "https://www.visitoestfold.com/")
+    
+    
 
     with st.container(key="image_container"):
+        st.image("assets/ostfold.jpg", width=100, )
         st.image("https://svinesundskommitten.com/wp-content/uploads/2023/08/logo_clean_heart.svg")
         st.image("https://svinesundskommitten.com/wp-content/uploads/2023/11/Logo-Sweden-Norway-CMYK-Color-02.png")
 
 
+    lang = st.selectbox("Språk:", ["no", "sv"])
+    if lang and lang != st.session_state["language"]:
+        st.session_state["language"] = lang
+        st.rerun()
+        lang = None
 
 # Main chat interface
-chatbox = st.container(height=600, vertical_alignment="bottom", )
+chatbox = st.container(height=500, vertical_alignment="bottom", )
 
 # repopulate the chat container after rerun/change
 for message, user in st.session_state["messages"]:
@@ -213,13 +229,10 @@ areas = st.pills (
     # with col2:
 with st.container(border=False, height="stretch"):
     st.markdown("**Snabbval**  ")
-    b_one, b_two, b_three = st.columns(3, gap="small", width=800)
-    questions = [
-        "Vad händer i gränsregionen idag?", 
-        "Vad kan jag hitta på med familjen den kommande veckan?", 
-        "Vad händer på Halloween?"]
+    b_one, b_two, b_three, b_four = st.columns(4, gap="small", width=800)
+    questions = st.session_state["settings"][st.session_state["language"]]["default_questions"]
 
-    for col, q in zip([b_one, b_two, b_three], questions):
+    for col, q in zip([b_one, b_two, b_three, b_four], questions):
         with col:
             if st.button(q, type="primary"):
                 st.session_state["bot_triggered"] = q
@@ -245,7 +258,7 @@ if query:
 
     status.update(state="complete")
     st.session_state["bot_triggered"] = False
-    st.session_state["messages"].append(({"general_response": bot_response.general_response}, "assistant"))
+    st.session_state["messages"].append(({"general_response": bot_response.general_response, "bot_response": bot_response}, "assistant"))
     chatbox.chat_message("assistant").write(bot_response.general_response)  
 
 
