@@ -10,7 +10,6 @@
         "default_questions": [
             "Vad händer i gränsregionen idag?",
             "Vad kan jag hitta på med familjen den kommande veckan?",
-            "Vad händer på Halloween?",
             "Översätt svaret till engelska"
         ],
         "greeting": "Hejsan! Vad kan jag hjälpa till med idag?",
@@ -23,7 +22,6 @@
         "default_questions": [
             "Hva skjer i grenseregionen i dag?",
             "Hva kan jeg finne på med familien den kommende uken?",
-            "Hva skjer på Halloween?",
             "Oversett svaret til engelsk"
         ],
         "greeting": "Hei! Hva kan jeg hjelpe deg med i dag?",

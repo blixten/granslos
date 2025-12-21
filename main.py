@@ -55,7 +55,7 @@ def send_chat_message(input, areas):
     #     if area:
 
     response = client.responses.parse(
-        model="gpt-4.1-mini",
+        model="gpt-5.2",
         temperature=0.1,
         input=[
             {
@@ -180,7 +180,7 @@ with st.sidebar:
     
 
     with st.container(key="image_container"):
-        st.image("assets/ostfold.jpg", width=100, )
+        st.image("assets/ostfold.jpg", width=75, )
         st.image("https://svinesundskommitten.com/wp-content/uploads/2023/08/logo_clean_heart.svg")
         st.image("https://svinesundskommitten.com/wp-content/uploads/2023/11/Logo-Sweden-Norway-CMYK-Color-02.png")
 
@@ -208,11 +208,16 @@ for message, user in st.session_state["messages"]:
 # with st.container(border=True):
 #     col1, col2 =  st.columns([0.5,1])
 #     with col1:
+#st.markdown("Avgränsa område:")
 areas = st.pills (
-    "Område:",
+    "Avgränsa område till:",
     options=["Bohuslän", "Dalsland", "Østfold"],
-    selection_mode="multi"
+    selection_mode="multi",
+    label_visibility="visible"
 )
+if areas:
+    st.session_state["areas"] = areas
+
         # with st.container(border=False, height="stretch"):
         #     st.markdown("**Område**:")
         #     area_1, area_2, area_3 = st.columns(3, width=310, vertical_alignment="center", gap=None )
@@ -227,15 +232,15 @@ areas = st.pills (
 
     # Presets, quick questions
     # with col2:
-with st.container(border=False, height="stretch"):
-    st.markdown("**Snabbval**  ")
-    b_one, b_two, b_three, b_four = st.columns(4, gap="small", width=800)
-    questions = st.session_state["settings"][st.session_state["language"]]["default_questions"]
+# with st.container(border=False, height="stretch"):
+#     st.markdown("Snabbval:")
+#     b_one, b_two, b_three, b_four = st.columns(4, gap="small", width=800)
+#     questions = st.session_state["settings"][st.session_state["language"]]["default_questions"]
 
-    for col, q in zip([b_one, b_two, b_three, b_four], questions):
-        with col:
-            if st.button(q, type="primary"):
-                st.session_state["bot_triggered"] = q
+#     for col, q in zip([b_one, b_two, b_three, b_four], questions):
+#         with col:
+#             if st.button(q, type="primary"):
+#                 st.session_state["bot_triggered"] = q
 
 
 bot_response = {}
