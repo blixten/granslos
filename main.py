@@ -185,7 +185,7 @@ with st.sidebar:
         st.image("https://svinesundskommitten.com/wp-content/uploads/2023/11/Logo-Sweden-Norway-CMYK-Color-02.png")
 
 
-    lang = st.selectbox("Språk:", ["no", "sv"])
+    lang = st.selectbox(st.session_state["settings"][st.session_state["language"]]["language_selector"], ["no", "sv"])
     if lang and lang != st.session_state["language"]:
         st.session_state["language"] = lang
         st.rerun()
@@ -210,7 +210,7 @@ for message, user in st.session_state["messages"]:
 #     with col1:
 #st.markdown("Avgränsa område:")
 areas = st.pills (
-    "Avgränsa område till:",
+    st.session_state["settings"][st.session_state["language"]]["area_selector"],
     options=["Bohuslän", "Dalsland", "Østfold"],
     selection_mode="multi",
     label_visibility="visible"
@@ -218,39 +218,29 @@ areas = st.pills (
 if areas:
     st.session_state["areas"] = areas
 
-        # with st.container(border=False, height="stretch"):
-        #     st.markdown("**Område**:")
-        #     area_1, area_2, area_3 = st.columns(3, width=310, vertical_alignment="center", gap=None )
-
-
-        #     with area_1:
-        #         b_select = st.checkbox("Bohuslän", value=True)
-        #     with area_2:
-        #         d_select = st.checkbox("Dalsland", value=True)
-        #     with area_3:
-        #         o_select = st.checkbox("Østfold", value=True)
-
     # Presets, quick questions
     # with col2:
-# with st.container(border=False, height="stretch"):
-#     st.markdown("Snabbval:")
-#     b_one, b_two, b_three, b_four = st.columns(4, gap="small", width=800)
-#     questions = st.session_state["settings"][st.session_state["language"]]["default_questions"]
+with st.container(border=False, height="stretch"):
+    st.markdown(f"{st.session_state["settings"][st.session_state["language"]]["questions_button"]}")
+    b_one, b_two, b_three, b_four = st.columns(4, gap="small", width=800)
+    questions = st.session_state["settings"][st.session_state["language"]]["default_questions"]
 
-#     for col, q in zip([b_one, b_two, b_three, b_four], questions):
-#         with col:
-#             if st.button(q, type="primary"):
-#                 st.session_state["bot_triggered"] = q
+    for col, q in zip([b_one, b_two, b_three, b_four], questions):
+        with col:
+            if st.button(q, type="secondary", use_container_width=True):
+                st.session_state["bot_triggered"] = q
 
 
 bot_response = {}
 
-input = st.chat_input("Din fråga") 
+input = st.chat_input(st.session_state["settings"][st.session_state["language"]]["query_input_placeholder"] ) 
 
 query = input or st.session_state["bot_triggered"]
 
 if query:
-    with st.status(label="Genererar svar...",   state="running") as status:
+    with st.status(
+        label=st.session_state["settings"][st.session_state["language"]]["generating"],   
+        state="running") as status:
     
         st.session_state["messages"].append((query, "user"))
         chatbox.chat_message("user").write(query)
