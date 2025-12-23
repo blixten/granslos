@@ -219,7 +219,6 @@ areas = st.pills (
     selection_mode="multi",
     label_visibility="visible"
 )
-st.write(st.session_state["language"])
 
 if areas:
     st.session_state["areas"] = areas
