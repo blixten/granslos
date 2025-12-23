@@ -47,7 +47,8 @@ def send_chat_message(input, areas):
     print(f"Using these vector stores: {store_ids}")
 
     current_time = datetime.now().strftime("%Y-%m-%d") #%H:%M")
-    
+    current_date = datetime.now().strftime("%Y-%m-%d")
+
     print(f"Generating response with input date '{current_time}' and input '{input}'")
 
     # filters = {}
@@ -77,7 +78,7 @@ def send_chat_message(input, areas):
                     "type": "input_text",
                     "text": f""" 
                             Conversation history: {history}
-                            Current time: {current_time}
+                            Current date and time: {current_date} - {current_time}
                             User prompt: {input}
                     """
                     },
@@ -185,14 +186,17 @@ with st.sidebar:
         st.image("https://svinesundskommitten.com/wp-content/uploads/2023/11/Logo-Sweden-Norway-CMYK-Color-02.png")
 
 
-    lang = st.selectbox(st.session_state["settings"][st.session_state["language"]]["language_selector"], ["no", "sv"])
+    lang = st.selectbox(
+    st.session_state["settings"][st.session_state["language"]]["language_selector"], 
+    ["","no", "sv"], placeholder=st.session_state["language"] )
+
     if lang and lang != st.session_state["language"]:
         st.session_state["language"] = lang
-        st.rerun()
         lang = None
+        st.rerun()
 
 # Main chat interface
-chatbox = st.container(height=500, vertical_alignment="bottom", )
+chatbox = st.container(height=450, vertical_alignment="bottom")
 
 # repopulate the chat container after rerun/change
 for message, user in st.session_state["messages"]:
@@ -215,6 +219,8 @@ areas = st.pills (
     selection_mode="multi",
     label_visibility="visible"
 )
+st.write(st.session_state["language"])
+
 if areas:
     st.session_state["areas"] = areas
 
