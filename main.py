@@ -53,8 +53,8 @@ def send_chat_message(input, areas):
 
     # filters = {}
     # for area in areas:
-    #     if area:
-
+    if areas ==  []:
+        areas = st.session_state["areas"].keys()
     response = client.responses.parse(
         model="gpt-5.2",
         temperature=0.1,
