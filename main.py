@@ -6,6 +6,46 @@ from datetime import datetime
 import uuid
 import os
 
+
+st.set_page_config(layout="wide")
+client = OpenAI(timeout=60)
+
+if "settings" not in st.session_state.keys():
+    with open("settings.json", "r", encoding="utf-8") as file:
+        settings = json.load(file)
+
+    st.session_state["settings"] = settings
+
+    if "main_prompt" not in st.session_state["settings"].keys():
+        st.session_state["settings"]["main_prompt"] = ""
+
+if "default_language" not in st.session_state.keys():
+    st.session_state["default_language"] = "no"
+
+if "language" not in st.session_state.keys():
+    st.session_state["language"] = st.session_state["default_language"]
+    
+
+if "messages" not in st.session_state.keys():
+    st.session_state["messages"] = [({"general_response": st.session_state["settings"][st.session_state["language"]]["greeting"]}, "assistant")]
+
+if "areas" not in st.session_state.keys():
+    st.session_state["areas"] = ["Bohuslän", "Dalsland", "Østfold"]
+
+if "bot_output" not in st.session_state.keys():
+    st.session_state["bot_output"] = ""
+if "bot_triggered" not in st.session_state.keys():
+    st.session_state["bot_triggered"] = False
+
+
+if "knowledge_sources" not in st.session_state.keys():
+    # stores = client.vector_stores.list()
+    st.session_state["knowledge_sources"] = ['vs_68959dfcaa408191abe2ec48d97b0720', 'vs_68959db1faf88191b036dfdde07dc40b']
+
+    files = client.files.list()
+    st.session_state["files"] = files
+
+
 class Location(BaseModel):
     name: str
     description: str
@@ -34,9 +74,6 @@ class Event_Query(BaseModel):
     things_to_do: list [ ThingsToDo ]
 
 
-st.set_page_config(layout="wide")
-client = OpenAI(timeout=60)
-
 def send_chat_message(input, areas):
 
     history = st.session_state["messages"]
@@ -54,7 +91,8 @@ def send_chat_message(input, areas):
     # filters = {}
     # for area in areas:
     if areas ==  []:
-        areas = st.session_state["areas"].keys()
+        areas = ["Bohuslän", "Dalsland", "Østfold"]
+
     response = client.responses.parse(
         model="gpt-5.2",
         temperature=0.1,
@@ -94,42 +132,6 @@ def send_chat_message(input, areas):
         text_format=Event_Query
     )   
     return response.output_parsed
-
-
-if "settings" not in st.session_state.keys():
-    with open("settings.json", "r", encoding="utf-8") as file:
-        settings = json.load(file)
-
-    st.session_state["settings"] = settings
-
-    if "main_prompt" not in st.session_state["settings"].keys():
-        st.session_state["settings"]["main_prompt"] = ""
-
-if "default_language" not in st.session_state.keys():
-    st.session_state["default_language"] = "no"
-
-if "language" not in st.session_state.keys():
-    st.session_state["language"] = st.session_state["default_language"]
-    
-
-if "messages" not in st.session_state.keys():
-    st.session_state["messages"] = [({"general_response": st.session_state["settings"][st.session_state["language"]]["greeting"]}, "assistant")]
-
-if "areas" not in st.session_state.keys():
-    st.session_state["areas"] = {"Bohuslän": True, "Dalsland": True, "Østfold": True }
-
-if "bot_output" not in st.session_state.keys():
-    st.session_state["bot_output"] = ""
-if "bot_triggered" not in st.session_state.keys():
-    st.session_state["bot_triggered"] = False
-
-
-if "knowledge_sources" not in st.session_state.keys():
-    # stores = client.vector_stores.list()
-    st.session_state["knowledge_sources"] = ['vs_68959dfcaa408191abe2ec48d97b0720', 'vs_68959db1faf88191b036dfdde07dc40b']
-
-    files = client.files.list()
-    st.session_state["files"] = files
         
 
 def preset_question(q):
@@ -221,7 +223,9 @@ areas = st.pills (
 )
 
 if areas:
-    st.session_state["areas"] = areas
+    st.session_state["areas"] = areas  # Update the dictionary with selected areas
+else:
+    st.session_state["areas"].clear()  # Clears the dictionary if no areas are selected
 
     # Presets, quick questions
     # with col2:
